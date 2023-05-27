@@ -1,24 +1,8 @@
 #include "main.h"
 
 /**
- * get_string_length - Calculates the length of the string
- * @str: The string to be calculated
- *
- * Return: The length of the string
- **/
-int get_string_length(const char *str)
-{
-	int length = 0;
-
-	while (str[length] != '\0')
-		length++;
-	return (length);
-}
-
-/**
- * _printf - Produces output according to a format
+ * _printf - Prints output according to a format
  * @format: Is a character, string.
- *
  * Return: The number of characters printed (excluding
  * the null byte used to end output to strings)
  **/
@@ -30,7 +14,7 @@ int _printf(const char *format, ...)
 	if (format == NULL)
 		return (-1);
 
-	size = get_string_length(format);
+	size = _strlen(format);
 	if (size <= 0)
 		return (0);
 
