@@ -1,11 +1,9 @@
 #include "main.h"
 
 /**
- * _write_char - prints a character
- * @c: The character to print
- *
- * Return: 1 on a success
- * On error, -1 is returned
+ * _write_char - prints character "c"
+ * @c: character variable
+ * Return: 1 (success) and -1
  */
 
 int _write_char(char c)
