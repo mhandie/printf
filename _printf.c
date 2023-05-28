@@ -8,6 +8,7 @@
 int _printf(const char *format, ...)
 {
 	int printed_chars;
+
 	conver_t f_list[] = {
 		{"c", print_char},
 		{"s", print_string},
@@ -23,6 +24,7 @@ int _printf(const char *format, ...)
 		{"X", print_heX},
 		{NULL, NULL}
 	};
+
 	va_list arg_list;
 
 	if (format == NULL)
