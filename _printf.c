@@ -1,62 +1,37 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
- * _printf - Prints output according to a format.
- * @format: A pointer to a character.
- *
- * Return: The number of characters printed
+ * _printf - function that produces output
+ * @format: A string variable
+ * Return: Printed characters
  */
 int _printf(const char *format, ...)
 {
-	int chars_printed = 0;
-	va_list args;
+	int printed_chars;
+	conver_t f_list[] = {
+		{"c", print_char},
+		{"s", print_string},
+		{"%", print_percent},
+		{"d", print_integer},
+		{"i", print_integer},
+		{"b", print_binary},
+		{"r", print_reversed},
+		{"R", rot13},
+		{"u", unsigned_integer},
+		{"o", print_octal},
+		{"x", print_hex},
+		{"X", print_heX},
+		{NULL, NULL}
+	};
+	va_list arg_list;
 
 	if (format == NULL)
 		return (-1);
 
-	va_start(args, format);
-
-	while (*format != '\0')
-	{
-		if (*format == '%')
-		{
-			switch (*++format)
-			{
-				case 'c':
-				{
-					int c = va_arg(args, int);
-
-					chars_printed += _write_char(c);
-					break;
-				}
-				case 's':
-				{
-					char *s = va_arg(args, char *);
-
-					chars_printed += fwrite(s, 1, strlen(s), stdout);
-					break;
-				}
-				case '%':
-				{
-					chars_printed += putchar('%');
-					break;
-				}
-				default:
-				{
-					break;
-				}
-			}
-		}
-		else
-		{
-			chars_printed += putchar(*format);
-		}
-
-		format++;
-	}
-
-	va_end(args);
-
-	return (chars_printed);
+	va_start(arg_list, format);
+	/* Calling parser function */
+	printed_chars = parser(format, f_list, arg_list);
+	va_end(arg_list);
+	return (printed_chars);
 }
+
