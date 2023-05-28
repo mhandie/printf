@@ -1,13 +1,13 @@
 #include "main.h"
 
 /**
- * parser - print a formatted
+ * anParser - print a formatted
  * @format: strings
  * @f_list: The posible functions
  * @arg_list: a list containing all the arguments
  * Return: total count of the characters printed
  */
-int parser(const char *format, conver_t f_list[], va_list arg_list)
+int anParser(const char *format, conver_t f_list[], va_list arg_list)
 {
 int i, j, r_val, printed_chars;
 
