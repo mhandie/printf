@@ -32,7 +32,7 @@ int _printf(const char *format, ...)
 
 	va_start(arg_list, format);
 	/* Calling anParser function */
-	printed_chars = anParser(format, f_list, (int *)arg_list);
+	printed_chars = anParser(format, f_list, arg_list);
 	va_end(arg_list);
 	return (printed_chars);
 }
