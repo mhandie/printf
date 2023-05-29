@@ -1,81 +1,69 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
- * rev_string - reverses a string
- * @s: string to reverse
- * Return: A pointer to a character
+ * _memcpy - Copies n bytes
+ * @output: A buffer_t struct.
+ * @src: A pointer to the memory area to copy.
+ * @n: The number of bytes to be copied.
+ *
+ * Return: The number of bytes copied.
  */
-
-char *rev_string(char *s)
+unsigned int _memcpy(buffer_t *output, const char *src, unsigned int n)
 {
-	int len;
-	int head;
-	char tmp;
-	char *dest;
+	unsigned int index;
 
-	for (len = 0; s[len] != '\0'; len++)
-	{}
+	for (index = 0; index < n; index++)
+	{
+		*(output->buffer) = *(src + index);
+		(output->len)++;
 
-	dest = malloc(sizeof(char) * (len + 1));
-	if (dest == NULL)
+		if (output->len == 1024)
+		{
+			write(1, output->start, output->len);
+			output->buffer = output->start;
+			output->len = 0;
+		}
+		else
+		{
+			(output->buffer)++;
+		}
+	}
+
+	return (n);
+}
+
+/**
+ * free_buffer - Frees a buffer_t struct.
+ * @output: The buffer_t struct to be freed.
+ */
+void free_buffer(buffer_t *output)
+{
+	free(output->start);
+	free(output);
+}
+
+/**
+ * init_buffer - Initializes a variable of struct
+ *
+ * Return: A pointer to the initialized buffer_t.
+ */
+buffer_t *init_buffer(void)
+{
+	buffer_t *output;
+
+	output = malloc(sizeof(buffer_t));
+	if (output == NULL)
 		return (NULL);
 
-	_memcpy(dest, s, len);
-	for (head = 0; head < len; head++, len--)
+	output->buffer = malloc(sizeof(char) * 1024);
+	if (output->buffer == NULL)
 	{
-		tmp = dest[len - 1];
-		dest[len - 1] = dest[head];
-		dest[head] = tmp;
+		free(output);
+		return (NULL);
 	}
-	return (dest);
-}
 
-/**
- * write_base - sends characters to standard output
- * @str: string to parse
- */
+	output->start = output->buffer;
+	output->len = 0;
 
-void write_base(char *str)
-{
-	int i;
-
-	for (i = 0; str[i] != '\0'; i++)
-		_write_char(str[i]);
-}
-
-/**
- * base_len - calculates length for an octal number
- * @num: number of length to calculate
- * @base: base to be calculated
- * Return: an integer representing the length
- */
-
-unsigned int base_len(unsigned int num, int base)
-{
-	unsigned int i;
-
-	for (i = 0; num > 0; i++)
-	{
-		num = num / base;
-	}
-	return (i);
-}
-
-/**
- * _memcpy - copy memory area
- * @dest: destination
- * @src: source to copy from
- * @n: number of bytes to copy
- * Return: a pointer to dest.
- */
-
-char *_memcpy(char *dest, char *src, unsigned int n)
-{
-	unsigned int i;
-
-	for (i = 0; i < n; i++)
-		dest[i] = src[i];
-	dest[i] = '\0';
-	return (dest);
+	return (output);
 }

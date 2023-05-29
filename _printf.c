@@ -1,73 +1,86 @@
 #include "main.h"
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdlib.h>
 
 /**
- * _printf - Prints output according to a format
- * @format: Is a character.
- * Return: The number of characters printed (excluding
- * the null byte used to end output to strings)
- **/
+ * cleanup - Performs cleanup for _printf.
+ * @args: A va_list of arguments for _printf.
+ * @output: A buffer_t struct.
+ */
+void cleanup(va_list args, buffer_t *output)
+{
+	va_end(args);
+	write(1, output->start, output->len);
+	free_buffer(output);
+}
+
+/**
+ * run_printf - Reads through the format string for _printf.
+ * @format: Character string to print - may have directives.
+ * @output: A buffer_t struct containing a buffer.
+ * @args: A va_list of arguments.
+ *
+ * Return: The number of characters stored to output.
+ */
+int run_printf(const char *format, va_list args, buffer_t *output)
+{
+	int i, wid, prec, ret = 0;
+	char tmp;
+	unsigned char flags, len;
+	unsigned int (*f)(va_list, buffer_t *, unsigned char, int, int, unsigned char);
+
+	for (i = 0; *(format + i); i++)
+	{
+		len = 0;
+		if (*(format + i) == '%')
+		{
+			tmp = 0;
+			flags = handle_flags(format + i + 1, &tmp);
+			wid = handle_width(args, format + i + tmp + 1, &tmp);
+			prec = handle_precision(args, format + i + tmp + 1,
+					&tmp);
+			len = handle_length(format + i + tmp + 1, &tmp);
+
+			f = handle_specifiers(format + i + tmp + 1);
+			if (f != NULL)
+			{
+				i += tmp + 1;
+				ret += f(args, output, flags, wid, prec, len);
+				continue;
+			}
+			else if (*(format + i + tmp + 1) == '\0')
+			{
+				ret = -1;
+				break;
+			}
+		}
+		ret += _memcpy(output, (format + i), 1);
+		i += (len != 0) ? 1 : 0;
+	}
+	cleanup(args, output);
+	return (ret);
+}
+
+/**
+ * _printf - Outputs a formatted string.
+ * @format: Character string to print - may have directives.
+ *
+ * Return: The number of characters printed.
+ */
 int _printf(const char *format, ...)
 {
-	int printed_chars = 0;
+	buffer_t *output;
 	va_list args;
-	int i;
-	char *str;
+	int ret;
+
+	if (format == NULL)
+		return (-1);
+
+	output = init_buffer();
+	if (output == NULL)
+		return (-1);
 
 	va_start(args, format);
 
-	for (i = 0; format && format[i]; i++)
-	{
-		if (format[i] == '%')
-		{
-			i++;
+	ret = run_printf(format, args, output);
 
-			switch (format[i])
-			{
-				case 'c':
-					{
-						char c = va_arg(args, int);
-						write(1, &c, 1);
-						printed_chars++;
-					}
-					break;
-
-				case 's':
-					{
-						str = va_arg(args, char *);
-						if (str == NULL)
-							str = "(null)";
-						while (*str)
-						{
-							write(1, str, 1);
-							str++;
-							printed_chars++;
-						}
-					}
-					break;
-
-				case '%':
-					write(1, "%", 1);
-					printed_chars++;
-					break;
-
-				default:
-					write(1, "%", 1);
-					write(1, &format[i], 1);
-					printed_chars += 2;
-					break;
-			}
-		}
-		else
-		{
-			write(1, &format[i], 1);
-			printed_chars++;
-		}
-	}
-
-	va_end(args);
-
-	return printed_chars;
+	return (ret);
 }
