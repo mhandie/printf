@@ -1,9 +1,15 @@
 #include "main.h"
 /**
  * print_binary - Converts number of base 10 to binary
- * @list: List of arguments passed
+ * @list: arguments passed
+ * @int: the integer
+ * @char: the character
  * Return: Length of the number printed
  */
+int main(void);
+
+int _write_char(char c);
+
 int hex_check(int, char);
 
 int print_binary(va_list list)
@@ -172,24 +178,4 @@ write_base(rev_hex);
 free(hex_rep);
 free(rev_hex);
 return (len);
-}
-
-/**
- * hex_check - Checks which hex function is calling it
- * @num: number to convert
- * @x: hex function that is calling
- * Return: Ascii value
- */
-
-int hex_check(int num, char x)
-{
-char *hex = "abcdef";
-char *Hex = "ABCDEF";
-
-num = num - 10;
-if (x == 'x')
-return (hex[num]);
-else
-return (Hex[num]);
-return (0);
 }

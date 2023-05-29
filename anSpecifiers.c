@@ -5,6 +5,8 @@
  * @list: arguments passed
  * Return: characters printed
  */
+int main(void);
+
 int print_char(va_list list)
 {
 _write_char(va_arg(list, int));
@@ -49,7 +51,6 @@ return (1);
  * @list: list of arguments passed
  * Return: number of characters printed
  */
-int print_integer(va_list list)
 {
 int num = va_arg(list, int);
 
@@ -60,7 +61,7 @@ _write_char('-');
 len++;
 num = -num;
 }
-len += print_number(num);
+len += print_number(len);
 return (len);
 }
 

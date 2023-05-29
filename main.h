@@ -16,9 +16,9 @@ int (*f)(va_list);
 typedef struct convert convert_t;
 
 /*Our main functions*/
-int parser(const char *format, convert_t f_list[], va_list arg_list);
+int anParser(const char *format, convert_t *f_list[], va_list arg_list);
 int _printf(const char *format, ...);
-int _write_char(char);
+int _write_char(char c);
 int print_char(va_list);
 int print_string(va_list);
 int print_percent(va_list);
