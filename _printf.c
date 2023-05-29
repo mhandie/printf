@@ -53,7 +53,7 @@ int _printf(const char *format, ...)
 					printed_chars++;
 					break;
 
-					default;
+				default:
 					write(1, "%", 1);
 					write(1, &format[i], 1);
 					printed_chars += 2;
