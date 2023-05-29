@@ -51,7 +51,7 @@ return (1);
  * @list: list of arguments passed
  * Return: number of characters printed
  */
-{
+
 int num = va_arg(list, int);
 
 int len = 0;
