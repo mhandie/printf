@@ -1,38 +1,73 @@
 #include "main.h"
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 /**
- * _printf - function that produces output
- * @format: A string variable
- * Return: Printed characters
- */
+ * _printf - Prints output according to a format
+ * @format: Is a character.
+ * Return: The number of characters printed (excluding
+ * the null byte used to end output to strings)
+ **/
 int _printf(const char *format, ...)
 {
-	int printed_chars;
+	int printed_chars = 0;
+	va_list args;
+	int i;
+	char *str;
 
-	conver_t f_list[] = {
-		{"c", print_char},
-		{"s", print_string},
-		{"%", print_percent},
-		{"d", print_integer},
-		{"i", print_integer},
-		{"b", print_binary},
-		{"r", print_reversed},
-		{"R", rot13},
-		{"u", unsigned_integer},
-		{"o", print_octal},
-		{"x", print_hex},
-		{"X", print_heX},
-		{NULL, NULL}
-	};
+	va_start(args, format);
 
-	va_list arg_list;
+	for (i = 0; format && format[i]; i++)
+	{
+		if (format[i] == '%')
+		{
+			i++;
 
-	if (format == NULL)
-		return (-1);
+			switch (format[i])
+			{
+				case 'c':
+					{
+						char c = va_arg(args, int);
+						write(1, &c, 1);
+						printed_chars++;
+					}
+					break;
 
-	va_start(arg_list, format);
-	/* Calling anParser function */
-	printed_chars = anParser(format, f_list, arg_list);
-	va_end(arg_list);
-	return (printed_chars);
+				case 's':
+					{
+						str = va_arg(args, char *);
+						if (str == NULL)
+							str = "(null)";
+						while (*str)
+						{
+							write(1, str, 1);
+							str++;
+							printed_chars++;
+						}
+					}
+					break;
+
+				case '%':
+					write(1, "%", 1);
+					printed_chars++;
+					break;
+
+					default;
+					write(1, "%", 1);
+					write(1, &format[i], 1);
+					printed_chars += 2;
+					break;
+			}
+		}
+		else
+		{
+			write(1, &format[i], 1);
+			printed_chars++;
+		}
+	}
+
+	va_end(args);
+
+	return printed_chars;
 }
