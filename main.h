@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdout.h>
 
 /* Our Modifiers*/
 #define PLUS 1
